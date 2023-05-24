@@ -1,18 +1,34 @@
 import ProjectCard from "./projectCard"
-function ProjectList({projects}){
-    console.log(projects)
-    const projectsCards = projects.map(individualProject=>{
-        return <ProjectCard key={individualProject.id} project={individualProject}/>
+import { useState } from "react"
+
+function ProjectList({ projects }) {
+    const [search, setSearch] = useState("")
+
+    const filteredProjects = projects.filter((individualProject) => {
+        if (search === "all") {
+            return true
+        }
+
+        if (individualProject.name.toLowerCase().includes(search.toLowerCase()) || individualProject.about.toLowerCase().includes(search.toLowerCase())) {
+            return true
+        }
     })
-    console.log(projectsCards)
-    // Project list
-    // map through the list and return name in div
-    // Display that!
-    // Lets create a smaller card component for each of these
-    // Destructure the data using {...}
-    // Create a ul with cards classname
-    // Create an li card that displays relevent info
-    // What happens if our data doesn't have what we need?
-    return <ul className = "cards">{projectsCards}</ul>
+
+    const projectsCards = filteredProjects.map(individualProject => {
+        return <ProjectCard key={individualProject.id} project={individualProject} />
+    })
+
+    function handleChange(e) {
+        setSearch(e.target.value)
+    }
+
+    return (
+        <>
+            <h3>Search</h3>
+            <input onChange={handleChange}></input>
+            <ul className="cards">{projectsCards}</ul>
+
+        </>
+    )
 }
 export default ProjectList
